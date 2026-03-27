@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="cineScopePro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CineScope Pro - Premium Movie Discovery Platform</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body ng-controller="MainController as vm" ng-class="{'dark-theme': vm.isDarkMode}">
+    <!-- Premium Loading Animation -->
+    <div class="premium-loader" ng-if="vm.isLoading" id="loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">CINESCOPE</div>
+        <div class="loader-dots">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Luxury Navigation -->
+        <nav class="luxury-nav" ng-class="{'nav-scrolled': vm.scrolled}">
+            <div class="nav-glow"></div>
+            <div class="nav-container">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <i class="fas fa-crown"></i>
+                        <div class="logo-glow"></div>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">CineScope</span>
+                        <span class="logo-badge">PRO</span>
+                    </div>
+                </div>
+                
+                <div class="nav-links">
+                    <a href="#" ng-click="vm.setActiveTab('home')" ng-class="{'active': vm.activeTab === 'home'}" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                        <div class="link-hover"></div>
+                    </a>
+                    <a href="#" ng-click="vm.setActiveTab('discover')" ng-class="{'active': vm.activeTab === 'discover'}" class="nav-link">
+                        <i class="fas fa-compass"></i>
+                        <span>Discover</span>
+                        <div class="link-hover"></div>
+                    </a>
+                    <a href="#" ng-click="vm.setActiveTab('favorites')" ng-class="{'active': vm.activeTab === 'favorites'}" class="nav-link">
+                        <i class="fas fa-heart"></i>
+                        <span>Favorites</span>
+                        <span class="nav-badge" ng-if="vm.favoritesCount > 0">{{ vm.favoritesCount }}</span>
+                    </a>
+                    <a href="#" ng-click="vm.setActiveTab('watchlist')" ng-class="{'active': vm.activeTab === 'watchlist'}" class="nav-link">
+                        <i class="fas fa-clock"></i>
+                        <span>Watchlist</span>
+                        <span class="nav-badge" ng-if="vm.watchlistCount > 0">{{ vm.watchlistCount }}</span>
+                    </a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="theme-toggle" ng-click="vm.toggleTheme()">
+                        <i ng-class="vm.isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Home Tab -->
+            <div ng-if="vm.activeTab === 'home'" class="tab-content">
+                <!-- Hero Section -->
+                <section class="hero-premium">
+                    <div class="hero-bg-animation"></div>
+                    <div class="hero-particles"></div>
+                    <div class="hero-content">
+                        <div class="hero-badge">
+                            <i class="fas fa-crown"></i> PREMIUM CINEMA EXPERIENCE
+                        </div>
+                        <h1 class="hero-title">
+                            Discover Your Next
+                            <span class="gradient-text">Cinematic Journey</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Explore over 250,000 movies, TV series, and episodes with real-time IMDb ratings
+                        </p>
+                        <div class="hero-stats">
+                            <div class="hero-stat">
+                                <i class="fas fa-film"></i>
+                                <span>250K+ Titles</span>
+                            </div>
+                            <div class="hero-stat">
+                                <i class="fas fa-star"></i>
+                                <span>IMDb Ratings</span>
+                            </div>
+                            <div class="hero-stat">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Real-time Updates</span>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="btn-luxury-primary" ng-click="vm.setActiveTab('discover')">
+                                <i class="fas fa-search"></i> Start Exploring
+                                <div class="btn-glow"></div>
+                            </button>
+                            <button class="btn-luxury-secondary" ng-click="vm.setActiveTab('favorites')">
+                                <i class="fas fa-heart"></i> My Collection
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hero-scroll-indicator">
+                        <div class="scroll-mouse"></div>
+                    </div>
+                </section>
+
+                <!-- Trending Section -->
+                <section class="trending-premium">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <div class="header-icon"><i class="fas fa-fire"></i></div>
+                            <h2>Trending Now</h2>
+                        </div>
+                        <div class="header-right">
+                            <span class="trending-badge">🔥 HOT THIS WEEK</span>
+                        </div>
+                    </div>
+                    <div class="movies-grid premium-grid">
+                        <div class="movie-card-premium" ng-repeat="movie in vm.trendingMovies" 
+                             ng-click="vm.viewMovieDetails(movie.imdbID)">
+                            <div class="card-glow"></div>
+                            <div class="card-image">
+                                <img ng-src="{{ movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster' }}" 
+                                     alt="{{ movie.Title }}">
+                                <div class="card-overlay-premium">
+                                    <div class="card-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>{{ movie.imdbRating || 'N/A' }}</span>
+                                    </div>
+                                    <button class="quick-view-btn" ng-click="$event.stopPropagation(); vm.quickView(movie)">
+                                        <i class="fas fa-eye"></i> Quick View
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3>{{ movie.Title }}</h3>
+                                <div class="card-meta">
+                                    <span><i class="far fa-calendar-alt"></i> {{ movie.Year }}</span>
+                                    <span class="type-tag" ng-if="movie.Type">{{ movie.Type | uppercase }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Premium Features Section -->
+                <section class="features-premium">
+                    <div class="section-header">
+                        <h2>Premium Features</h2>
+                        <p>Elevate your movie discovery experience</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                            <h3>Advanced Analytics</h3>
+                            <p>Track your viewing habits and get personalized insights</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <h3>Sync Across Devices</h3>
+                            <p>Your favorites and watchlist always in sync</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-magic"></i></div>
+                            <h3>AI Recommendations</h3>
+                            <p>Smart suggestions based on your taste</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+                            <h3>Social Sharing</h3>
+                            <p>Share your favorite movies with friends</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Discover Tab -->
+            <div ng-if="vm.activeTab === 'discover'" class="tab-content">
+                <div class="discover-header">
+                    <div class="discover-bg"></div>
+                    <div class="discover-content">
+                        <h1>Discover Movies</h1>
+                        <p>Search by title, actor, director, or genre</p>
+                        
+                        <div class="premium-search">
+                            <div class="search-wrapper">
+                                <i class="fas fa-search search-icon-premium"></i>
+                                <input type="text" 
+                                       ng-model="vm.searchQuery" 
+                                       ng-model-options="{debounce: 500}"
+                                       ng-change="vm.performSearch()"
+                                       placeholder="Search for movies... (e.g., Inception, The Matrix)"
+                                       class="search-input-premium">
+                                <button ng-click="vm.performSearch()" ng-disabled="vm.searchLoading" class="search-btn-premium">
+                                    <i ng-class="vm.searchLoading ? 'fas fa-spinner fa-pulse' : 'fas fa-arrow-right'"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="filter-bar">
+                                <div class="filter-group">
+                                    <i class="fas fa-tag"></i>
+                                    <select ng-model="vm.typeFilter" ng-change="vm.performSearch()">
+                                        <option value="">All Types</option>
+                                        <option value="movie">Movies</option>
+                                        <option value="series">TV Series</option>
+                                        <option value="episode">Episodes</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <i class="fas fa-calendar"></i>
+                                    <input type="number" ng-model="vm.yearFilter" 
+                                           placeholder="Year" ng-change="vm.performSearch()">
+                                </div>
+                                <div class="filter-group">
+                                    <i class="fas fa-sort"></i>
+                                    <select ng-model="vm.sortBy" ng-change="vm.applySorting()">
+                                        <option value="">Sort by</option>
+                                        <option value="year_desc">Newest First</option>
+                                        <option value="year_asc">Oldest First</option>
+                                        <option value="title_asc">Title A-Z</option>
+                                        <option value="title_desc">Title Z-A</option>
+                                    </select>
+                                </div>
+                                <button class="clear-filters-btn" ng-click="vm.clearFilters()" ng-if="vm.typeFilter || vm.yearFilter">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="results-container">
+                    <div class="results-header" ng-if="vm.movies.length > 0">
+                        <div class="results-info">
+                            <h3>Search Results</h3>
+                            <p>Found <strong>{{ vm.totalResults }}</strong> movies for "{{ vm.searchQuery }}"</p>
+                        </div>
+                        <div class="view-toggle">
+                            <button ng-click="vm.viewMode = 'grid'" ng-class="{'active': vm.viewMode === 'grid'}">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button ng-click="vm.viewMode = 'list'" ng-class="{'active': vm.viewMode === 'list'}">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="loading-spinner" ng-if="vm.searchLoading">
+                        <div class="spinner-ring"></div>
+                        <p>Searching database...</p>
+                    </div>
+
+                    <div class="movies-grid premium-grid" ng-class="{'list-mode': vm.viewMode === 'list'}" ng-if="!vm.searchLoading && vm.movies.length > 0">
+                        <div class="movie-card-premium" ng-repeat="movie in vm.filteredMovies" 
+                             ng-click="vm.viewMovieDetails(movie.imdbID)">
+                            <div class="card-glow"></div>
+                            <div class="card-image">
+                                <img ng-src="{{ movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster' }}" 
+                                     alt="{{ movie.Title }}">
+                                <div class="card-actions">
+                                    <button class="action-btn" ng-click="$event.stopPropagation(); vm.toggleFavorite(movie)" 
+                                            ng-class="{'active': vm.isFavorite(movie.imdbID)}">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn" ng-click="$event.stopPropagation(); vm.toggleWatchlist(movie)"
+                                            ng-class="{'active': vm.isInWatchlist(movie.imdbID)}">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3>{{ movie.Title }}</h3>
+                                <div class="card-meta">
+                                    <span><i class="far fa-calendar-alt"></i> {{ movie.Year }}</span>
+                                    <span class="type-tag" ng-if="movie.Type">{{ movie.Type | uppercase }}</span>
+                                </div>
+                                <div class="card-rating-small" ng-if="movie.imdbRating">
+                                    <i class="fas fa-star"></i> {{ movie.imdbRating }}/10
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="no-results-premium" ng-if="!vm.searchLoading && vm.searchPerformed && vm.movies.length === 0">
+                        <i class="fas fa-film-slash"></i>
+                        <h3>No movies found</h3>
+                        <p>We couldn't find any movies matching "{{ vm.searchQuery }}"</p>
+                        <div class="suggestions">
+                            <button ng-click="vm.searchQuery = 'Inception'; vm.performSearch()">Inception</button>
+                            <button ng-click="vm.searchQuery = 'Interstellar'; vm.performSearch()">Interstellar</button>
+                            <button ng-click="vm.searchQuery = 'The Dark Knight'; vm.performSearch()">The Dark Knight</button>
+                        </div>
+                    </div>
+
+                    <div class="pagination-premium" ng-if="vm.totalPages > 1">
+                        <button ng-click="vm.changePage(vm.currentPage - 1)" ng-disabled="vm.currentPage === 1">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span>Page {{ vm.currentPage }} of {{ vm.totalPages }}</span>
+                        <button ng-click="vm.changePage(vm.currentPage + 1)" ng-disabled="vm.currentPage === vm.totalPages">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div ng-if="vm.activeTab === 'favorites'" class="tab-content">
+                <div class="collection-header">
+                    <div class="collection-bg"></div>
+                    <div class="collection-content">
+                        <i class="fas fa-heart"></i>
+                        <h1>My Favorites</h1>
+                        <p>Your personally curated collection</p>
+                    </div>
+                </div>
+                <div class="collection-container">
+                    <div class="movies-grid premium-grid" ng-if="vm.favoritesList.length > 0">
+                        <div class="movie-card-premium" ng-repeat="movie in vm.favoritesList" 
+                             ng-click="vm.viewMovieDetails(movie.imdbID)">
+                            <div class="card-image">
+                                <img ng-src="{{ movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster' }}" 
+                                     alt="{{ movie.Title }}">
+                                <div class="card-actions">
+                                    <button class="action-btn active" ng-click="$event.stopPropagation(); vm.toggleFavorite(movie)">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3>{{ movie.Title }}</h3>
+                                <div class="card-meta">
+                                    <span>{{ movie.Year }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-collection" ng-if="vm.favoritesList.length === 0">
+                        <i class="fas fa-heart-broken"></i>
+                        <h3>No favorites yet</h3>
+                        <p>Start adding movies to your favorites collection</p>
+                        <button class="btn-luxury-primary" ng-click="vm.setActiveTab('discover')">
+                            Discover Movies
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Watchlist Tab -->
+            <div ng-if="vm.activeTab === 'watchlist'" class="tab-content">
+                <div class="collection-header">
+                    <div class="collection-bg"></div>
+                    <div class="collection-content">
+                        <i class="fas fa-clock"></i>
+                        <h1>My Watchlist</h1>
+                        <p>Movies you plan to watch</p>
+                    </div>
+                </div>
+                <div class="collection-container">
+                    <div class="movies-grid premium-grid" ng-if="vm.watchlistList.length > 0">
+                        <div class="movie-card-premium" ng-repeat="movie in vm.watchlistList" 
+                             ng-click="vm.viewMovieDetails(movie.imdbID)">
+                            <div class="card-image">
+                                <img ng-src="{{ movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster' }}" 
+                                     alt="{{ movie.Title }}">
+                                <div class="card-actions">
+                                    <button class="action-btn active" ng-click="$event.stopPropagation(); vm.toggleWatchlist(movie)">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <h3>{{ movie.Title }}</h3>
+                                <div class="card-meta">
+                                    <span>{{ movie.Year }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-collection" ng-if="vm.watchlistList.length === 0">
+                        <i class="fas fa-list"></i>
+                        <h3>Your watchlist is empty</h3>
+                        <p>Add movies you want to watch later</p>
+                        <button class="btn-luxury-primary" ng-click="vm.setActiveTab('discover')">
+                            Discover Movies
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Premium Footer -->
+        <footer class="premium-footer">
+            <div class="footer-glow"></div>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-crown"></i>
+                    <span>CineScope Pro</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">API</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>Powered by OMDb API | Data provided by IMDb</p>
+                    <p>© 2024 CineScope Pro - Premium Movie Discovery</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="premium-modal" ng-if="vm.showModal" ng-click="vm.closeModal()">
+        <div class="modal-content-premium" ng-click="$event.stopPropagation()">
+            <button class="modal-close" ng-click="vm.closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body" ng-if="vm.selectedMovie">
+                <img ng-src="{{ vm.selectedMovie.Poster !== 'N/A' ? vm.selectedMovie.Poster : 'https://via.placeholder.com/300x450?text=No+Poster' }}" 
+                     alt="{{ vm.selectedMovie.Title }}">
+                <div class="modal-info">
+                    <h2>{{ vm.selectedMovie.Title }}</h2>
+                    <div class="modal-meta">
+                        <span>{{ vm.selectedMovie.Year }}</span>
+                        <span>{{ vm.selectedMovie.Runtime }}</span>
+                        <span>{{ vm.selectedMovie.Rated }}</span>
+                    </div>
+                    <div class="modal-rating" ng-if="vm.selectedMovie.imdbRating">
+                        <i class="fas fa-star"></i>
+                        <strong>{{ vm.selectedMovie.imdbRating }}/10</strong>
+                        <span>({{ vm.selectedMovie.imdbVotes }} votes)</span>
+                    </div>
+                    <p class="modal-plot">{{ vm.selectedMovie.Plot }}</p>
+                    <div class="modal-actions">
+                        <button class="btn-primary" ng-click="vm.viewFullDetails()">
+                            View Full Details
+                        </button>
+                        <button class="btn-secondary" ng-click="vm.toggleFavorite(vm.selectedMovie)">
+                            <i class="fas fa-heart"></i> Add to Favorites
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="premium-toast" ng-if="vm.toastMessage" ng-class="{'show': vm.toastMessage}">
+        <i class="fas" ng-class="vm.toastType === 'success' ? 'fa-check-circle' : 'fa-info-circle'"></i>
+        <span>{{ vm.toastMessage }}</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app.js"></script>
+    <script src="controllers/mainController.js"></script>
+    
+    <script>
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var loader = document.getElementById('loader');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(function() {
+                        loader.style.display = 'none';
+                    }, 500);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
