@@ -36,6 +36,15 @@ content="website" />
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YWPCPQQ4C8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YWPCPQQ4C8');
+</script>
 <body ng-controller="MainController as vm" ng-class="{'dark-theme': vm.isDarkMode}">
     <!-- Premium Loading Animation -->
     <div class="premium-loader" ng-if="vm.isLoading" id="loader">
